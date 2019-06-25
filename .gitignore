@@ -1,4 +1,5 @@
-syslogfc
+syslog_fc
+build/
 *.json
 *.csv
 *.html
