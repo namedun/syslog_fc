@@ -51,6 +51,13 @@ static int validate_priority(const struct syslog_field *field);
 static syslog_field_info_t syslog_field_info[] =
 {
 	{
+		.id         = SYSLOG_FIELD_ID_ID,
+		.type       = SYSLOG_FIELD_TYPE_UINTEGER,
+		.spec       = 'I',
+		.param_name = "id",
+		.human_name = "ID",
+	},
+	{
 		.id         = SYSLOG_FIELD_ID_TIMESTAMP,
 		.type       = SYSLOG_FIELD_TYPE_TIME,
 		.spec       = 'T',

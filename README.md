@@ -58,6 +58,7 @@ Available syslog entry specificators are listed below:
 
 | Specificator | Description |
 | --- | --- |
+| `%I` | Numeric identifier |
 | `%T` | Timestamp. For parsing this field used timestamp parsing format specification, which can be specified by option `--ts-parse-spec`. |
 | `%H` | Hostname. |
 | `%F` | Facility. Valid facilities are `auth`, `authpriv`, `cron`, `daemon`, `ftp`, `kern`, `lpr`, `mail`, `mark`, `news`, `security`, `syslog`, `user`, `uucp`, `local0`, `local1`, `local2`, `local3`, `local4`, `local5`, `local6`, `local7`. |
@@ -71,7 +72,7 @@ Available modifiers:
 
 | Modifier | Description |
 | --- | --- |
-| `_` | Do not trim spaces at the beginning. No effect for timestamp field. |
+| `_` | Do not trim spaces at the beginning. No effect for timestamp and identifier fields. |
 | `@` | Do not validate parsed value. |
 | `!` | Do not use this field in the output. |
 

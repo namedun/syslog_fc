@@ -57,6 +57,7 @@ typedef enum
  */
 typedef enum
 {
+	SYSLOG_FIELD_ID_ID,         /**< Numeric identifier */
 	SYSLOG_FIELD_ID_TIMESTAMP,  /**< Date and time */
 	SYSLOG_FIELD_ID_HOSTNAME,   /**< Hostname */
 	SYSLOG_FIELD_ID_FACILITY,   /**< Facility */
