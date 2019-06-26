@@ -65,7 +65,11 @@ static void fmt_md_output_entry(const syslog_entry_t *entry)
 				break;
 
 			case SYSLOG_FIELD_TYPE_STRING:
-				printf("%s", field->value.string);
+				if (field->info->id == SYSLOG_FIELD_ID_MESSAGE)
+					printf("`%s`", field->value.string);
+				else
+					printf("%s", field->value.string);
+
 				break;
 		}
 	}
