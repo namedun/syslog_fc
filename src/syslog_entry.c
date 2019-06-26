@@ -194,9 +194,7 @@ int syslog_entry_init(
 	assert(entry);
 	assert(entry_spec);
 
-	entry->num = 0;
-	entry->fields = NULL;
-	entry->fields_mask = 0;
+	memset(entry, 0, sizeof(syslog_entry_t));
 
 	for( ; *p; p++)
 	{
@@ -282,6 +280,11 @@ int syslog_entry_init(
 		field->next             = NULL;
 		field->parse_start_char = parse_start_char;
 		field->parse_stop_char  = 0;
+
+		entry->fields_num++;
+
+		if (!(field->flags & SYSLOG_FIELD_FLAG_DROP))
+			entry->fields_output_num++;
 
 		if (!entry->fields)
 		{

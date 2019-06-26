@@ -146,9 +146,11 @@ typedef struct syslog_field
  */
 typedef struct syslog_entry
 {
-	unsigned int num;           /**< Entry number */
-	unsigned int fields_mask;   /**< Used fields mask */
-	syslog_field_t *fields;     /**< Fields list */
+	unsigned int num;               /**< Entry number */
+	unsigned int fields_mask;       /**< Used fields mask */
+	unsigned int fields_num;        /**< Total number of fields */
+	unsigned int fields_output_num; /**< Number of fields for output */
+	syslog_field_t *fields;         /**< Fields list */
 
 } syslog_entry_t;
 
