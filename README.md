@@ -146,6 +146,7 @@ Default: `off`.
 
 | Format | Description |
 | --- | --- |
+| `asciidoc` | AsciiDoc |
 | `csv` | CSV (Comma-Separated Values) |
 | `html` | HTML (HyperText Markup Language) table |
 | `json` | JSON (JavaScript Object Notation) |

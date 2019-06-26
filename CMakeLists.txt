@@ -20,6 +20,7 @@ ADD_EXECUTABLE(syslog_fc
 	src/formats/fmt_csv.c
 	src/formats/fmt_json.c
 	src/formats/fmt_html.c
+	src/formats/fmt_asciidoc.c
 )
 
 INSTALL(TARGETS syslog_fc RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})

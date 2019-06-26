@@ -36,6 +36,7 @@
 #include <fmt_csv.h>
 #include <fmt_md.h>
 #include <fmt_html.h>
+#include <fmt_asciidoc.h>
 
 /**
  * @brief Output formats
@@ -47,6 +48,7 @@ static const output_fmt_t *fmt_avail[] =
 	&fmt_csv,
 	&fmt_json,
 	&fmt_html,
+	&fmt_asciidoc,
 	NULL
 };
 
