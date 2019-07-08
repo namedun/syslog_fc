@@ -1,6 +1,6 @@
 # Syslog File Converter (syslog_fc)
 
-[![Build Status](https://img.shields.io/travis/namedun/syslog_fc/master.svg)](https://travis-ci.org/namedun/syslog_fc)
+[![Build Status](https://img.shields.io/travis/namedun/syslog_fc/master.svg)](https://travis-ci.org/namedun/syslog_fc) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/f6090a0a38164300a7f95b709b704bd4)](https://www.codacy.com/app/namedun/syslog_fc?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=namedun/syslog_fc&amp;utm_campaign=Badge_Grade)
 
 This utility is designed to convert syslog files to various other text formats, such as CSV, HTML or JSON (full list of the supported output formats are listed below in the "[Supported Output Formats](#supported-output-formats)" section).
 
