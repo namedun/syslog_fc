@@ -382,7 +382,7 @@ static int convert_syslog(FILE *input)
 			if (!line)
 				break;
 
-			line_len += strlen(line);
+			line_len += strnlen(line, buffer_size);
 
 			if ((buffer[line_len - 1] == '\r') ||
 			    (buffer[line_len - 1] == '\n'))
@@ -393,8 +393,8 @@ static int convert_syslog(FILE *input)
 			if (buffer_size > SYSLOG_MAX_BUFFER_SIZE)
 			{
 				fprintf(stderr,
-					"line %u: Line buffer size limit (%u) reached\n",
-					line_n, SYSLOG_MAX_BUFFER_SIZE);
+					"line %u: Line buffer size limit (%zu) reached\n",
+					line_n, (size_t)SYSLOG_MAX_BUFFER_SIZE);
 
 				free(buffer);
 				return -EINVAL;
@@ -405,7 +405,7 @@ static int convert_syslog(FILE *input)
 			{
 				fprintf(stderr,
 					"line %u: Failed to reallocate memory for line buffer "
-					"(%lu -> %lu)\n",
+					"(%zu -> %zu)\n",
 					line_n,
 					buffer_size - SYSLOG_BUFFER_SIZE,
 					buffer_size);

@@ -20,7 +20,7 @@ $ make
 
 This will produce binary `syslogfc` in the current directory. To install this binary to `/usr/bin` run command as `root` user:
 
-```
+```shell
 # make install
 ```
 
@@ -31,12 +31,12 @@ Usage syntax:
 syslogfc [options] <input-file>
 ```
 
-* `[options]` is a one or more additional optional options that are described in the "[Options](#options)" section.
-* `<input-file>` is the path to the syslog file to be converted. Input syslog file path should not be specified if selected the input from standard input (stdin) using additional option `--stdin` (see the "[Options](#options)" section).
+*   `[options]` is a one or more additional optional options that are described in the "[Options](#options)" section.
+*   `<input-file>` is the path to the syslog file to be converted. Input syslog file path should not be specified if selected the input from standard input (stdin) using additional option `--stdin` (see the "[Options](#options)" section).
 
 ### Options
 
-#### `-h`, `--help`:
+#### `-h`, `--help`
 
 Show help and usage text.
 
@@ -56,34 +56,34 @@ Syslog entry fields specification. This specification determines the order and t
 
 Available syslog entry specificators are listed below:
 
-| Specificator | Description |
-| --- | --- |
-| `%I` | Numeric identifier |
-| `%T` | Timestamp. For parsing this field used timestamp parsing format specification, which can be specified by option `--ts-parse-spec`. |
-| `%K` | Kernel time. |
-| `%H` | Hostname. |
-| `%F` | Facility. Valid facilities are `auth`, `authpriv`, `cron`, `daemon`, `ftp`, `kern`, `lpr`, `mail`, `mark`, `news`, `security`, `syslog`, `user`, `uucp`, `local0`, `local1`, `local2`, `local3`, `local4`, `local5`, `local6`, `local7`. |
-| `%P` | Priority. Valid priorities are `alert`, `crit`, `debug`, `emerg`, `err`, `error`, `info`, `none`, `notice`, `panic`, `warn`, `warning`. |
-| `%G` | Tag. |
-| `%M` | Message. |
+| Specificator | Description                                                                                                                                                                                                                              |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `%I`         | Numeric identifier                                                                                                                                                                                                                       |
+| `%T`         | Timestamp. For parsing this field used timestamp parsing format specification, which can be specified by option `--ts-parse-spec`.                                                                                                       |
+| `%K`         | Kernel time.                                                                                                                                                                                                                             |
+| `%H`         | Hostname.                                                                                                                                                                                                                                |
+| `%F`         | Facility. Valid facilities are `auth`, `authpriv`, `cron`, `daemon`, `ftp`, `kern`, `lpr`, `mail`, `mark`, `news`, `security`, `syslog`, `user`, `uucp`, `local0`, `local1`, `local2`, `local3`, `local4`, `local5`, `local6`, `local7`. |
+| `%P`         | Priority. Valid priorities are `alert`, `crit`, `debug`, `emerg`, `err`, `error`, `info`, `none`, `notice`, `panic`, `warn`, `warning`.                                                                                                  |
+| `%G`         | Tag.                                                                                                                                                                                                                                     |
+| `%M`         | Message.                                                                                                                                                                                                                                 |
 
 One or more special modifiers can be specified between the `%` character and the specifier character, for example `%_@P`. The modifiers allows you to control the process of parsing or displaying (output) the values of the corresponding fields. For example, with the modifiers you can prevent the trimming spaces for a specific field, or disable value validation for it.
 
 Available modifiers:
 
-| Modifier | Description |
-| --- | --- |
-| `_` | Do not trim spaces at the beginning. No effect for timestamp and identifier fields. |
-| `@` | Do not validate parsed value. |
-| `!` | Do not use this field in the output. |
+| Modifier | Description                                                                         |
+| -------- | ----------------------------------------------------------------------------------- |
+| `_`      | Do not trim spaces at the beginning. No effect for timestamp and identifier fields. |
+| `@`      | Do not validate parsed value.                                                       |
+| `!`      | Do not use this field in the output.                                                |
 
 Default entry fields specification is `%T %F.%P %G: %_M`, which corresponds to the syslog file entries in the form:
-```
+```plain
 <Timestamp> <Facility>.<Priority> <Tag>: <Message>
 ```
 
 For example:
-```
+```plain
 Mon Jun 24 18:12:50 2019 kern.info kernel: br-lan: port 1(sw1p1) entered blocking state
 └┬─────────────────────┘ └┬─┘ └┬─┘ └┬───┘  └┬─────────────────────────────────────────┘
  │                        │    │    │       │
@@ -94,14 +94,13 @@ Mon Jun 24 18:12:50 2019 kern.info kernel: br-lan: port 1(sw1p1) entered blockin
  └─────────────────────────────────────────────> Timestamp
 ```
 
-
 #### `-p <spec>`, `--ts-parse-spec=<spec>`
 
 Timestamp parsing format specification.
 
 The format specification `<spec>` is a string and may contain special character sequences called conversion specifications, each of which is introduced by a `%` character and terminated by some other character known as a conversion specifier character. All other character sequences are ordinary character sequences.
 
-All available conversion specifier characters are listed at the `strptime()` function manual page (https://linux.die.net/man/3/strptime).
+All available conversion specifier characters are listed at the `strptime()` function manual page (<https://linux.die.net/man/3/strptime>).
 
 Note, that if the parameter value contains spaces, it must be enclosed in quotes. For example:
 ```shell
@@ -116,7 +115,7 @@ Timestamp output format specification.
 
 The format specification `<spec>` is a string and may contain special character sequences called conversion specifications, each of which is introduced by a `%` character and terminated by some other character known as a conversion specifier character. All other character sequences are ordinary character sequences.
 
-All available conversion specifier characters are listed at the `strftime()` function manual page (https://linux.die.net/man/3/strftime).
+All available conversion specifier characters are listed at the `strftime()` function manual page (<https://linux.die.net/man/3/strftime>).
 
 Note, that if the parameter value contains spaces, it must be enclosed in quotes. For example:
 ```shell
@@ -125,13 +124,13 @@ $ syslogfc --ts-output-spec="%d.%m.%Y %H:%M:%S" /path/to/syslog.log
 
 Default format for output is not specified. If the output format is not specified or specified as empty string, then the time will be output as UNIX timestamp.
 
-#### `-d <delimieter>`, `--csv-delimeter=<delimeter>`.
+#### `-d <delimieter>`, `--csv-delimeter=<delimeter>`
 
 Delimeter for `csv` (CSV) output format.
 
 Default: `,` (comma).
 
-#### `-x <prefix>`, `--html-class-prefix=<prefix>`.
+#### `-x <prefix>`, `--html-class-prefix=<prefix>`
 
 Prefix for HTML classes for `html` output format.
 
@@ -145,14 +144,14 @@ Default: `off`.
 
 ## Supported Output Formats
 
-| Format | Description |
-| --- | --- |
-| `asciidoc` | AsciiDoc |
-| `csv` | CSV (Comma-Separated Values) |
-| `html` | HTML (HyperText Markup Language) table |
-| `json` | JSON (JavaScript Object Notation) |
-| `md` | Markdown table |
-| `plain` | Plain text format (for testing) |
+| Format     | Description                            |
+| ---------- | -------------------------------------- |
+| `asciidoc` | AsciiDoc                               |
+| `csv`      | CSV (Comma-Separated Values)           |
+| `html`     | HTML (HyperText Markup Language) table |
+| `json`     | JSON (JavaScript Object Notation)      |
+| `md`       | Markdown table                         |
+| `plain`    | Plain text format (for testing)        |
 
 ## Examples
 
@@ -160,7 +159,7 @@ Default: `off`.
 
 Input syslog file `example1.log`:
 
-```
+```plain
 Mon Jun 24 18:12:50 2019 kern.info kernel: br-lan: port 1(sw1p1) entered blocking state
 Mon Jun 24 18:12:50 2019 daemon.info mstpd[1882]: set_if_up: Port "sw1p1" : up
 Mon Jun 24 18:12:50 2019 daemon.notice netifd: bridge "br-lan" link is up
@@ -214,7 +213,7 @@ $ syslogfc --format=json example1.log | python3 -m json.tool
 
 Input syslog file `example2.log`:
 
-```
+```plain
 24.06.2019 18:12:50 kern.info kernel: br-lan: port 1(sw1p1) entered blocking state
 24.06.2019 18:12:50 daemon.info mstpd[1882]: set_if_up: Port "sw1p1" : up
 24.06.2019 18:12:50 daemon.notice netifd: bridge "br-lan" link is up
@@ -258,10 +257,8 @@ See [CHANGELOG.md](CHANGELOG.md).
 
 This work is free. You can redistribute it and/or modify it under the
 terms of the Do What The Fuck You Want To Public License, Version 2,
-as published by Sam Hocevar. See http://www.wtfpl.net/ for more details.
+as published by Sam Hocevar. See <http://www.wtfpl.net/> for more details.
 
 ## Authors
 
-* Anton Kikin <a.kikin@tano-systems.com>
-
-
+*   Anton Kikin <mailto:a.kikin@tano-systems.com>
