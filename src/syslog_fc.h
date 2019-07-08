@@ -18,7 +18,10 @@
 #define __SYSLOG_FC_H__
 
 /** @brief Maximum syslog entry line size */
-#define SYSLOG_MAX_LINE_SIZE  256
+#define SYSLOG_MAX_BUFFER_SIZE  16384
+
+/** @brief Initial buffer size for syslog file reading */
+#define SYSLOG_BUFFER_SIZE  256
 
 /** @brief Helper macro for array size calculation */
 #define ARRAY_SIZE(a)  (sizeof(a) / sizeof(a[0]))

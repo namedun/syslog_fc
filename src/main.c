@@ -334,9 +334,20 @@ static int convert_syslog(FILE *input)
 	int ret = 0;
 	syslog_entry_t entry;
 
-	char line[SYSLOG_MAX_LINE_SIZE];
+	char *buffer;
+	size_t buffer_size = SYSLOG_BUFFER_SIZE;
+
 	unsigned int parsed_n = 0;
 	unsigned int line_n = 0;
+
+	buffer = malloc(buffer_size);
+	if (!buffer)
+	{
+		fprintf(stderr,
+			"Failed to allocate memory for line buffer\n");
+
+		return -ENOMEM;
+	}
 
 	ret = syslog_entry_init(&entry, config.entry_spec);
 	if (ret)
@@ -344,20 +355,73 @@ static int convert_syslog(FILE *input)
 		fprintf(stderr,
 			"Syslog entry initialization failed (%d)\n", ret);
 
+		free(buffer);
 		return ret;
 	}
 
 	if (config.output_fmt->fn_output_start)
 		config.output_fmt->fn_output_start(&entry);
 
-	while (fgets(line, sizeof(line), input))
+	while (1)
 	{
 		int status;
+		size_t buffer_offset = 0;
+		size_t line_len = 0;
 
 		line_n++;
 
+		while (1)
+		{
+			char *new_buffer;
+			char *line;
+
+			line = fgets(buffer + buffer_offset,
+				buffer_size - buffer_offset, input);
+
+			if (!line)
+				break;
+
+			line_len += strlen(line);
+
+			if ((buffer[line_len - 1] == '\r') ||
+			    (buffer[line_len - 1] == '\n'))
+				break;
+
+			/* Increase line buffer size */
+			buffer_size += SYSLOG_BUFFER_SIZE;
+			if (buffer_size > SYSLOG_MAX_BUFFER_SIZE)
+			{
+				fprintf(stderr,
+					"line %u: Line buffer size limit (%u) reached\n",
+					line_n, SYSLOG_MAX_BUFFER_SIZE);
+
+				free(buffer);
+				return -EINVAL;
+			}
+
+			new_buffer = realloc(buffer, buffer_size);
+			if (!new_buffer)
+			{
+				fprintf(stderr,
+					"line %u: Failed to reallocate memory for line buffer "
+					"(%lu -> %lu)\n",
+					line_n,
+					buffer_size - SYSLOG_BUFFER_SIZE,
+					buffer_size);
+
+				free(buffer);
+				return -ENOMEM;
+			}
+
+			buffer = new_buffer;
+			buffer_offset = line_len;
+		}
+
+		if (!line_len) /* EOF */
+			break;
+
 		status = syslog_entry_parse(
-			&entry, line_n, line);
+			&entry, line_n, buffer);
 
 		if (!status)
 		{
@@ -373,6 +437,7 @@ static int convert_syslog(FILE *input)
 
 	syslog_entry_destroy(&entry);
 
+	free(buffer);
 	return ret;
 }
 
