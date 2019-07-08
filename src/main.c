@@ -142,6 +142,7 @@ static void display_usage(void)
 		"\n"
 		"        Allowed format specificators:\n"
 		"            %%T - Timestamp\n"
+		"            %%K - Kernel time\n"
 		"            %%H - Hostname\n"
 		"            %%F - Facility\n"
 		"            %%P - Priority\n"

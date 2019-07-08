@@ -59,6 +59,7 @@ typedef enum
 {
 	SYSLOG_FIELD_ID_ID,         /**< Numeric identifier */
 	SYSLOG_FIELD_ID_TIMESTAMP,  /**< Date and time */
+	SYSLOG_FIELD_ID_KTIME,      /**< Kernel time */
 	SYSLOG_FIELD_ID_HOSTNAME,   /**< Hostname */
 	SYSLOG_FIELD_ID_FACILITY,   /**< Facility */
 	SYSLOG_FIELD_ID_PRIORITY,   /**< Priority */

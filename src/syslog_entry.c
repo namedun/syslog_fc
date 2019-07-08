@@ -65,6 +65,13 @@ static syslog_field_info_t syslog_field_info[] =
 		.human_name = "Timestamp",
 	},
 	{
+		.id         = SYSLOG_FIELD_ID_KTIME,
+		.type       = SYSLOG_FIELD_TYPE_STRING,
+		.spec       = 'K',
+		.param_name = "ktime",
+		.human_name = "Kernel Time",
+	},
+	{
 		.type       = SYSLOG_FIELD_TYPE_STRING,
 		.id         = SYSLOG_FIELD_ID_HOSTNAME,
 		.spec       = 'H',

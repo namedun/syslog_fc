@@ -60,6 +60,7 @@ Available syslog entry specificators are listed below:
 | --- | --- |
 | `%I` | Numeric identifier |
 | `%T` | Timestamp. For parsing this field used timestamp parsing format specification, which can be specified by option `--ts-parse-spec`. |
+| `%K` | Kernel time. |
 | `%H` | Hostname. |
 | `%F` | Facility. Valid facilities are `auth`, `authpriv`, `cron`, `daemon`, `ftp`, `kern`, `lpr`, `mail`, `mark`, `news`, `security`, `syslog`, `user`, `uucp`, `local0`, `local1`, `local2`, `local3`, `local4`, `local5`, `local6`, `local7`. |
 | `%P` | Priority. Valid priorities are `alert`, `crit`, `debug`, `emerg`, `err`, `error`, `info`, `none`, `notice`, `panic`, `warn`, `warning`. |
