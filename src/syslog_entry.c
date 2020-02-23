@@ -1,6 +1,6 @@
 /*
  * Syslog File Converter
- * Copyright Â© 2019 Anton Kikin <a.kikin@tano-systems.com>
+ * Copyright © 2019-2020 Anton Kikin <a.kikin@tano-systems.com>
  *
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -44,6 +44,8 @@
 
 static int validate_facility(const struct syslog_field *field);
 static int validate_priority(const struct syslog_field *field);
+
+static int mod_priority(struct syslog_field *field);
 
 /**
  * @brief Available syslog fields information array
@@ -92,7 +94,8 @@ static syslog_field_info_t syslog_field_info[] =
 		.spec       = 'P',
 		.param_name = "priority",
 		.human_name = "Priority",
-		.validator  = validate_priority
+		.validator  = validate_priority,
+		.modifier   = mod_priority
 	},
 	{
 		.id         = SYSLOG_FIELD_ID_TAG,
@@ -144,6 +147,36 @@ static const CODE *find_syslog_name(
 }
 
 /**
+ * Checks for the presence of the specified value in the array
+ * of the CODE items.
+ *
+ * Type of the structure CODE declared in default header file
+ * @p <sys/syslog.h>.
+ *
+ * @param[in] code Pointer to the array of the CODE items
+ * @param[in] val Value to check
+ *
+ * @return Pointer to the founded name from @p code list
+ * @return NULL if name is not founded in the @p code list
+ */
+static const CODE *find_syslog_name_by_val(
+	const CODE *code,
+	const int val)
+{
+	const CODE *c;
+
+	assert(code);
+
+	for (c = code; c->c_name; c++)
+	{
+		if (val == c->c_val)
+			return c;
+	}
+
+	return NULL;
+}
+
+/**
  * Validate syslog facility name in the syslog entry field value.
  *
  * @param[in] field  Pointer to the syslog entry field.
@@ -177,6 +210,53 @@ static int validate_priority(const struct syslog_field *field)
 		return 0;
 
 	return -EINVAL;
+}
+
+/**
+ * Skip spaces at beginning of string.
+ *
+ * @param[in] p Pointer to the string.
+ *
+ * @return Pointer to the first non-space character in the string @p p.
+ */
+static int strisnumber(const char *p)
+{
+	if (!p || !*p)
+		return 0;
+
+	while(*p)
+	{
+		if (!isdigit(*p++))
+			return 0;
+	}
+
+	return 1;
+}
+
+static int mod_priority(struct syslog_field *field)
+{
+	const CODE *prcode;
+
+	assert(field);
+	assert(field->info->id == SYSLOG_FIELD_ID_PRIORITY);
+
+	if (!strisnumber(field->value.string))
+		return 0;
+
+	/* String is number, try to find priority name by number */
+	prcode = find_syslog_name_by_val(
+		prioritynames, (int)strtoul(field->value.string, NULL, 0));
+
+	if (prcode)
+	{
+		field->value.string = strdup(prcode->c_name);
+		if (!field->value.string)
+			return -ENOMEM;
+
+		field->flags |= SYSLOG_FIELD_FLAG_MEM_ALLOCATED;
+	}
+
+	return 0;
 }
 
 /* ----------------------------------------------------------------------- */
@@ -319,6 +399,10 @@ void syslog_entry_destroy(syslog_entry_t *entry)
 	while(field)
 	{
 		syslog_field_t *field_next = field->next;
+
+		if (field->flags & SYSLOG_FIELD_FLAG_MEM_ALLOCATED)
+			free(field->value.string);
+
 		free(field);
 		field = field_next;
 	}
@@ -533,6 +617,21 @@ static int syslog_entry_field_parse(
 		);
 
 		return ret;
+	}
+
+	/* Modify parsed value if needed */
+	if (field->info->modifier)
+	{
+		ret = field->info->modifier(field);
+		if (ret)
+		{
+			fprintf(stderr,
+				"line %u: Modifier failed for field '%s' (%d)\n",
+				line_n, field->info->param_name, ret
+			);
+
+			return ret;
+		}
 	}
 
 	/* Validate parsed value */

@@ -1,6 +1,6 @@
 /*
  * Syslog File Converter
- * Copyright © 2019 Anton Kikin <a.kikin@tano-systems.com>
+ * Copyright © 2019-2020 Anton Kikin <a.kikin@tano-systems.com>
  *
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -35,6 +35,9 @@ struct syslog_field;
 
 /** @brief Skip validation */
 #define SYSLOG_FIELD_FLAG_NOVALIDATION (1 << 2)
+
+/** @brief Memory allocated for data flag */
+#define SYSLOG_FIELD_FLAG_MEM_ALLOCATED (1 << 3)
 
 /** @} */
 
@@ -89,6 +92,17 @@ typedef struct syslog_field_info
 	 * and < 0 otherwise.
 	 */
 	int (*validator)(const struct syslog_field *field);
+
+	/**
+	 * @brief Modifier function pointer
+	 *
+	 * Function has one argument @p field, which
+	 * is a pointer to the syslog entry field data structure.
+	 *
+	 * Function must return <0 if modifier failed
+	 * and 0 otherwise.
+	 */
+	int (*modifier)(struct syslog_field *field);
 
 } syslog_field_info_t;
 
