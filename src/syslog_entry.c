@@ -243,7 +243,10 @@ static int mod_priority(struct syslog_field *field)
 	if (!strisnumber(field->value.string))
 		return 0;
 
-	/* String is number, try to find priority name by number */
+	/* String is number, disabled validation and try to find
+	   priority name by number */
+	field->flags |= SYSLOG_FIELD_FLAG_NOVALIDATION;
+
 	prcode = find_syslog_name_by_val(
 		prioritynames, (int)strtoul(field->value.string, NULL, 0));
 
