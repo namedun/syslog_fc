@@ -574,6 +574,12 @@ static int syslog_entry_field_parse(
 {
 	int ret;
 
+	if (field->flags & SYSLOG_FIELD_FLAG_MEM_ALLOCATED)
+	{
+		free(field->value.string);
+		field->flags &= (~SYSLOG_FIELD_FLAG_MEM_ALLOCATED);
+	}
+
 	if (field->parse_start_char)
 	{
 		*data = strchr(*data, field->parse_start_char);
