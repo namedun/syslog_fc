@@ -1,6 +1,6 @@
 /*
  * Syslog File Converter
- * Copyright © 2019 Anton Kikin <a.kikin@tano-systems.com>
+ * Copyright © 2019-2020 Anton Kikin <a.kikin@tano-systems.com>
  *
  * JSON ouput format support
  *
@@ -16,6 +16,7 @@
  * @author Anton Kikin <a.kikin@tano-systems.com>
  */
 
+#include <ctype.h> /* tolower() */
 #include <syslog_fc.h>
 
 static void fmt_json_output_encoded(const char *string)
@@ -23,7 +24,7 @@ static void fmt_json_output_encoded(const char *string)
 	const char *p = string;
 	while (*p)
 	{
-		switch(*p)
+		switch (*p)
 		{
 			case '\b': fputs("\\b",  stdout); break;
 			case '\f': fputs("\\f",  stdout); break;
@@ -32,7 +33,19 @@ static void fmt_json_output_encoded(const char *string)
 			case '\t': fputs("\\t",  stdout); break;
 			case '\\': fputs("\\\\", stdout); break;
 			case '"' : fputs("\\\"", stdout); break;
-			case 0x1b: fputs("\\\\033", stdout); break;
+			case 0x1b:
+				/* Do not output non-printable characters
+				 * Filter part of vt100 escape sequences such
+				 * as vt100 colors, etc */
+				while (*p)
+				{
+					if (strchr("abcdhsujkm", tolower(*p)))
+						break;
+
+					p++;
+				}
+
+				break;
 
 			default:
 				fputc(*p, stdout);
