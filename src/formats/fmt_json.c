@@ -32,7 +32,7 @@ static void fmt_json_output_encoded(const char *string)
 			case '\t': fputs("\\t",  stdout); break;
 			case '\\': fputs("\\\\", stdout); break;
 			case '"' : fputs("\\\"", stdout); break;
-			case 0x1b: fputs("\\033", stdout); break;
+			case 0x1b: fputs("\\\\033", stdout); break;
 
 			default:
 				fputc(*p, stdout);
